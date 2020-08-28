@@ -2066,7 +2066,7 @@
     "sqlConfig": ";",
     "dbs": [
       {
-        "name": "foodie-shop",
+        "name": "foodie",
         "defaultDB": true,
         "properties": {
           "driver_class_name": "com.mysql.jdbc.Driver",
