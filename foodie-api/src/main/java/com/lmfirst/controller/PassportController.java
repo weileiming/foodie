@@ -3,13 +3,18 @@ package com.lmfirst.controller;
 import com.lmfirst.pojo.Users;
 import com.lmfirst.pojo.bo.UserBO;
 import com.lmfirst.service.UserService;
+import com.lmfirst.utils.CookieUtils;
 import com.lmfirst.utils.JSONResult;
+import com.lmfirst.utils.JsonUtils;
 import com.lmfirst.utils.MD5Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * PassportController
@@ -43,7 +48,7 @@ public class PassportController {
 
     @ApiOperation(value = "用户注册", notes = "用户注册", httpMethod = "POST")
     @PostMapping("/regist")
-    public JSONResult register(@RequestBody UserBO userBO) {
+    public JSONResult register(@RequestBody UserBO userBO, HttpServletRequest request, HttpServletResponse response) {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
         String confirmPassword = userBO.getConfirmPassword();
@@ -72,14 +77,18 @@ public class PassportController {
         }
 
         // 4. 实现注册
-        userService.createUser(userBO);
+        Users userResult = userService.createUser(userBO);
 
-        return JSONResult.ok();
+        userResult = setNullProperty(userResult);
+
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userResult), true);
+
+        return JSONResult.ok(userResult);
     }
 
     @ApiOperation(value = "用户登录", notes = "用户登录", httpMethod = "POST")
     @PostMapping("/login")
-    public JSONResult login(@RequestBody UserBO userBO) throws Exception {
+    public JSONResult login(@RequestBody UserBO userBO, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String username = userBO.getUsername();
         String password = userBO.getPassword();
 
@@ -95,7 +104,22 @@ public class PassportController {
             return JSONResult.errorMsg("用户名或密码不正确");
         }
 
+        userResult = setNullProperty(userResult);
+
+        CookieUtils.setCookie(request, response, "user", JsonUtils.objectToJson(userResult), true);
+
         return JSONResult.ok(userResult);
+    }
+
+    private Users setNullProperty(Users userResult) {
+        userResult.setPassword(null);
+        userResult.setMobile(null);
+        userResult.setEmail(null);
+        userResult.setCreatedTime(null);
+        userResult.setUpdatedTime(null);
+        userResult.setBirthday(null);
+
+        return  userResult;
     }
 
 }
