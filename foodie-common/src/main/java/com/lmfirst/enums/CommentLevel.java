@@ -1,0 +1,22 @@
+package com.lmfirst.enums;
+
+/**
+ * 商品评价等级 枚举
+ *
+ * @author leiming
+ * @date 9/8/20
+ */
+public enum CommentLevel {
+
+    GOOD(1, "好评"),
+    NORMAL(2, "中评"),
+    BAD(3, "差评");
+
+    public final Integer type;
+    public final String value;
+
+    CommentLevel(Integer type, String value) {
+        this.type = type;
+        this.value = value;
+    }
+}
