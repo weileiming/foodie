@@ -22,7 +22,10 @@
         AND ic.comment_level = #{paramsMap.level}
       </if>
   </select>
-  
+
+  <!--  k: 默认，代表默认排序，根据name-->
+  <!--  c: 根据销量排序-->
+  <!--  p: 根据价格排序-->
   <select id="searchItems" parameterType="Map" resultType="com.lmfirst.pojo.vo.SearchItemsVO">
     SELECT
       i.id AS itemId,
@@ -65,7 +68,47 @@
         </otherwise>
       </choose>
   </select>
-  <!--  k: 默认，代表默认排序，根据name-->
-  <!--  c: 根据销量排序-->
-  <!--  p: 根据价格排序-->
+
+  <select id="searchItemsByThirdCat" parameterType="Map" resultType="com.lmfirst.pojo.vo.SearchItemsVO">
+    SELECT
+      i.id AS itemId,
+      i.item_name AS itemName,
+      i.sell_counts AS sellCounts,
+      ii.url AS imgUrl,
+      tempSpec.priceDiscount AS price
+    FROM
+      items i
+    LEFT JOIN
+      items_img ii
+    ON
+      i.id = ii.item_id
+    LEFT JOIN
+      (
+        SELECT
+          item_id, MIN(price_discount) AS priceDiscount
+        FROM
+          items_spec
+        GROUP BY
+          item_id
+      ) tempSpec
+    ON
+      i.id = tempSpec.item_id
+    WHERE
+      ii.is_main = 1
+    AND
+      i.cat_id = #{paramsMap.catId}
+    ORDER BY
+      <choose>
+        <when test=" paramsMap.sort == &quot;c&quot; ">
+          i.sell_counts DESC
+        </when>
+        <when test=" paramsMap.sort == &quot;p&quot; ">
+          tempSpec.priceDiscount ASC
+        </when>
+        <otherwise>
+          i.item_name ASC
+        </otherwise>
+      </choose>
+  </select>
+
 </mapper>
