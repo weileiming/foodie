@@ -6,6 +6,7 @@ import com.lmfirst.pojo.ItemsParam;
 import com.lmfirst.pojo.ItemsSpec;
 import com.lmfirst.pojo.vo.CommentLevelCountsVO;
 import com.lmfirst.pojo.vo.ItemInfoVO;
+import com.lmfirst.pojo.vo.ShopcartVO;
 import com.lmfirst.service.ItemService;
 import com.lmfirst.utils.JSONResult;
 import com.lmfirst.utils.PagedGridResult;
@@ -131,6 +132,18 @@ public class ItemsController extends BaseController {
         PagedGridResult grid = itemService.searchItems(catId, sort, page, pageSize);
 
         return JSONResult.ok(grid);
+    }
+
+    @ApiOperation(value = "根据商品规格ids查找最新商品数据", notes = "根据商品规格ids查找最新商品数据", httpMethod = "GET")
+    @GetMapping("/refresh")
+    public JSONResult refresh(@ApiParam(name = "itemSpecIds", value = "拼接的规格ids", required = true, example = "1001, 1003, 1005") @RequestParam String itemSpecIds) {
+        if (StringUtils.isBlank(itemSpecIds)) {
+            return JSONResult.ok();
+        }
+
+        List<ShopcartVO> list = itemService.queryItemsBySpecIds(itemSpecIds);
+
+        return JSONResult.ok(list);
     }
 
 }

@@ -2,6 +2,7 @@ package com.lmfirst.mapper;
 
 import com.lmfirst.pojo.vo.ItemCommentVO;
 import com.lmfirst.pojo.vo.SearchItemsVO;
+import com.lmfirst.pojo.vo.ShopcartVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -14,5 +15,7 @@ public interface ItemsMapperCustom {
     public List<SearchItemsVO> searchItems(@Param("paramsMap") Map<String, Object> map);
 
     public List<SearchItemsVO> searchItemsByThirdCat(@Param("paramsMap") Map<String, Object> map);
+
+    public List<ShopcartVO> queryItemsBySpecIds(@Param("paramsList") List<String> specIdsList);
 
 }
