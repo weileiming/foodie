@@ -11,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -100,6 +98,17 @@ public class AddressController {
         }
 
         addressService.updateUserAddress(addressBO);
+        return JSONResult.ok();
+    }
+
+    @ApiOperation(value = "用户删除地址", notes = "用户删除地址", httpMethod = "POST")
+    @PostMapping("/delete")
+    public JSONResult delete(@RequestParam String userId, @RequestParam String addressId) {
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(addressId)) {
+            return JSONResult.errorMsg("");
+        }
+
+        addressService.deleteUserAddress(userId, addressId);
         return JSONResult.ok();
     }
 
