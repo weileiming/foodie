@@ -51,8 +51,8 @@ public class OrdersController extends BaseController {
         merchantOrdersVO.setReturnUrl(payReturnUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("imoocUserId", "imooc");
-        headers.add("password", "imooc");
+        headers.add("imoocUserId", "3191830-466087209");
+        headers.add("password", "frje-iowj-foie-tkg3");
         HttpEntity<MerchantOrdersVO> entity = new HttpEntity<>(merchantOrdersVO, headers);
         ResponseEntity<JSONResult> responseEntity = restTemplate.postForEntity(paymentUrl, entity, JSONResult.class);
         JSONResult paymentResult = responseEntity.getBody();
